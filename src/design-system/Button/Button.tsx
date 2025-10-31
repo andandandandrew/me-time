@@ -1,16 +1,15 @@
 import React, { forwardRef } from 'react';
 import styles from './Button.module.css';
 
-export type ButtonVariant = 'primary' | 'ghost';
+export type ButtonTheme = 'primary' | 'ghost';
 export type ButtonSize = 'default' | 'small';
 
 type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & { as: 'a'; href: string };
 type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & { as?: 'button' };
 
 type CommonProps = {
-  variant?: ButtonVariant;
+  theme?: ButtonTheme;
   size?: ButtonSize;
-  fullWidth?: boolean;
 };
 
 export type DSButtonProps = CommonProps & (AnchorProps | NativeButtonProps);
@@ -18,9 +17,8 @@ export type DSButtonProps = CommonProps & (AnchorProps | NativeButtonProps);
 export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, DSButtonProps>(
   (
     {
-      variant = 'primary',
+      theme = 'primary',
       size = 'default',
-      fullWidth = false,
       className = '',
       children,
       as = 'button',
@@ -30,9 +28,8 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, DSButton
   ) => {
     const composed = [
       styles.button,
-      variant && styles[variant],
+      theme && styles[theme],
       size && styles[`size-${size}`],
-      fullWidth ? styles['full-width'] : '',
       className,
     ]
       .filter(Boolean)

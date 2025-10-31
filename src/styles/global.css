@@ -14,6 +14,14 @@
   --root-green-500: #10b981;
   --root-green-600: #0e8b55;
   --root-green-700: #095d39;
+  --root-green-800: #0E8B55;
+  --root-green-900: #095D39;
+  --root-green-950: #07462A;
+  --root-purple-400: #a78bfa;
+  --root-purple-500: #8b5cf6;
+  --root-purple-600: #7c3aed;
+  --root-purple-700: #5b21b6;
+  --root-purple-800: #4c1d95;
 
   /* aliases (semantic) */
   --background-surface-1: var(--root-base-white);
@@ -24,10 +32,10 @@
   --disabled-content: var(--root-gray-300);
 
   /* component tokens (reference aliases or root scales) */
-  --button-primary-bg: var(--root-green-500);
-  --button-primary-bg-hover: var(--root-green-600);
-  --button-primary-bg-press: var(--root-green-700);
-  --button-primary-content: var(--content-default);
+  --button-primary-bg: var(--root-green-800);
+  --button-primary-bg-hover: var(--root-green-900);
+  --button-primary-bg-press: var(--root-green-950);
+  --button-primary-content: var(--root-base-white);
 
   /* Typography */
   --font-family-default: "Inter", sans-serif;
@@ -57,7 +65,7 @@
   --button-primary-bg: var(--root-green-300);
   --button-primary-bg-hover: var(--root-green-400);
   --button-primary-bg-press: var(--root-green-500);
-  --button-primary-content: var(--content-default);
+  --button-primary-content: var(--root-gray-950);
 }
 
 /* Base Styles */
@@ -68,13 +76,12 @@
 }
 
 body {
+  background-color: var(--background-surface-1);
   font-family: var(--font-family-default);
   font-size: var(--text-size-default-font-size);
   line-height: var(--text-size-default-line-height);
   letter-spacing: var(--text-size-default-letter-spacing);
   color: var(--content-default);
-  background-color: var(--background-surface-1);
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #root {
