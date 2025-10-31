@@ -1,0 +1,485 @@
+# Design System Rules for Figma Integration
+
+This document defines the design system structure and patterns for integrating Figma designs using the Model Context Protocol (MCP).
+
+## 1. Token Definitions
+
+### Location
+Design tokens are defined in `src/styles/global.css` and documented in `src/styles/VARIABLES_PATTERN.md`.
+
+### Structure
+The token system uses a three-layer architecture:
+
+#### Layer 1: Color Root (Base Tokens)
+- **Location**: `:root` in `src/styles/global.css`
+- **Format**: `--root-<color-family>-<scale>` (e.g., `--root-green-500`, `--root-purple-700`)
+- **Properties**:
+  - Direct mappings to Figma's `color_root` collection
+  - No color modes or themes (constants)
+  - Organized in Tailwind-style color scales
+  - Should NOT be used directly in components (use aliases or component tokens)
+
+```css
+:root {
+  /* color_root base (no modes) */
+  --root-base-white: #ffffff;
+  --root-base-black: #171717;
+  --root-gray-100: #f3f4f6;
+  --root-green-500: #10b981;
+  --root-purple-700: #5b21b6;
+  /* ... */
+}
+```
+
+#### Layer 2: Aliases (Semantic Tokens)
+- **Location**: `:root` and `[data-theme="dark"]` in `src/styles/global.css`
+- **Format**: Semantic names without component prefixes (e.g., `--content-default`, `--background-surface-1`)
+- **Properties**:
+  - Human-readable, semantic names
+  - Reference `color_root` tokens
+  - Support color modes (overridden in `[data-theme="dark"]`)
+
+```css
+:root {
+  /* aliases (semantic) */
+  --background-surface-1: var(--root-base-white);
+  --content-default: var(--root-gray-950);
+  --disabled-background: var(--root-gray-500);
+}
+
+[data-theme="dark"] {
+  --content-default: var(--root-base-white);
+  --background-surface-1: var(--root-base-black);
+}
+```
+
+#### Layer 3: Component Tokens
+- **Location**: `:root` and `[data-theme="dark"]` in `src/styles/global.css`
+- **Format**: `--<component>-<theme>-<attribute>[-<modifier>]` (e.g., `--button-primary-bg`, `--button-primary-bg-hover`)
+- **Properties**:
+  - Component-specific variables
+  - Reference aliases or color_root tokens
+  - May be overridden per mode when component theme requires it
+
+```css
+:root {
+  /* component tokens */
+  --button-primary-bg: var(--root-green-800);
+  --button-primary-bg-hover: var(--root-green-900);
+  --button-primary-content: var(--root-base-white);
+}
+
+[data-theme="dark"] {
+  --button-primary-bg: var(--root-green-300);
+  --button-primary-bg-hover: var(--root-green-400);
+}
+```
+
+### Token Naming Conventions
+- **kebab-case** with prefixes
+- **color_root**: `--root-*` (family-scale, e.g., `--root-green-600`)
+- **aliases**: Semantic names without component prefixes (e.g., `--content-default`)
+- **component**: `--<component>-<theme>-<attribute>[-<modifier>]` (e.g., `--button-primary-bg-hover`)
+- Names should align with Figma variable names/scales where possible
+
+### Token Rules
+1. **Never hardcode values** in components; always reference variables
+2. **Prefer aliases** in components; use color_root only when needed
+3. **Keep spacing, radius, typography** as separate semantic groups (`--spacing-*`, `--radius-*`, `--text-size-*`)
+4. **Add new variables exclusively** in `global.css`
+5. **Update color_root values** from Figma when tokens change (no modes)
+6. **Keep aliases/component tokens as references**; do not replace with literals
+
+## 2. Component Library
+
+### Location
+Components are located in `src/design-system/<ComponentName>/`
+
+### File Structure
+Each component must follow this structure:
+```
+src/design-system/
+  ComponentName/
+    ComponentName.tsx          # Component implementation
+    ComponentName.module.css   # Component styles (CSS Modules)
+    ComponentName.stories.tsx  # Storybook stories (required)
+```
+
+### Component Architecture
+
+#### TypeScript Component Pattern
+```typescript
+// src/design-system/ComponentName/ComponentName.tsx
+import styles from './ComponentName.module.css';
+
+interface ComponentNameProps {
+  theme?: 'primary' | 'secondary';
+  size?: 'default' | 'small';
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export const ComponentName = ({ 
+  theme = 'primary', 
+  size = 'default',
+  className = '',
+  children,
+  ...props 
+}: ComponentNameProps) => {
+  const composed = [
+    styles.componentName,
+    styles[theme],
+    styles[`size-${size}`],
+    className,
+  ].filter(Boolean).join(' ');
+  
+  return (
+    <div className={composed} {...props}>
+      {children}
+    </div>
+  );
+};
+```
+
+### Component Rules
+1. **Match Figma property names** - Use `theme` if Figma uses "Theme", `size` if Figma uses "Size"
+2. **Export types** - Export component prop types for reuse
+3. **Use forwardRef** - When component needs ref support
+4. **Support className** - Always accept and merge `className` prop
+5. **Spread props** - Use spread operator for HTML attributes compatibility
+
+## 3. Frameworks & Libraries
+
+### Technology Stack
+- **Framework**: React 18.2+
+- **Language**: TypeScript 5.2+
+- **Build System**: Vite 5.0+
+- **Styling**: CSS Modules with PostCSS nesting
+- **Documentation**: Storybook 8.3+
+
+### Dependencies
+```json
+{
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0",
+  "@vitejs/plugin-react": "^4.2.1",
+  "postcss": "^8.4.47",
+  "postcss-nesting": "^12.1.5",
+  "storybook": "^8.3.4"
+}
+```
+
+### Build Configuration
+- **Vite Config**: `vite.config.ts` uses React plugin
+- **PostCSS**: Configured for CSS nesting support
+- **TypeScript**: Strict mode enabled
+
+## 4. Styling Approach
+
+### CSS Modules
+All component styles use **CSS Modules** for scoped styling:
+- Extension: `.module.css` (required)
+- Import: `import styles from './ComponentName.module.css';`
+- Access: `styles.className` (TypeScript type-safe)
+- Scoping: Automatic class name scoping prevents collisions
+
+### CSS Pattern
+```css
+/* src/design-system/ComponentName/ComponentName.module.css */
+
+/* Base component styles */
+.componentName {
+  /* Use global CSS variables */
+  color: var(--content-default);
+  background-color: var(--background-surface-1);
+  font-family: var(--font-family-default);
+  font-size: var(--text-size-default-font-size);
+  line-height: var(--text-size-default-line-height);
+  padding: var(--spacing-default);
+  border-radius: var(--radius-default);
+}
+
+/* Variants and modifiers as flat selectors (CSS Modules automatically scopes) */
+.variant-primary {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-content);
+
+  /* Pseudo-selectors nested within parent */
+  &:hover {
+    background-color: var(--button-primary-bg-hover);
+  }
+
+  &:active {
+    background-color: var(--button-primary-bg-press);
+  }
+}
+
+/* Size variants */
+.size-small {
+  height: var(--interactive-height-small);
+}
+
+.size-default {
+  height: var(--interactive-height-default);
+}
+
+/* Disabled styles */
+.button {
+  &:disabled,
+  &[aria-disabled="true"] {
+    background-color: var(--disabled-background);
+    color: var(--disabled-content);
+    cursor: not-allowed;
+  }
+}
+```
+
+### Styling Rules
+1. **Use flat selectors for variants** - Variant classes should be flat selectors (e.g., `.primary`, `.size-default`), not nested under base selector
+2. **Nest pseudo-selectors** - Pseudo-selectors (e.g., `:hover`, `:disabled`) should be nested within their parent variant using `&`
+3. **Reference global variables** - Always use variables from `global.css`, never hardcode values
+4. **No CSS calculations** - Avoid `calc()`; reference spacing variables directly
+5. **Direct variable references** - Use `var(--spacing-default)` instead of `calc(var(--spacing-default) * 1.6)`
+6. **No inline styles** - Avoid inline styles in components
+
+### Class Composition
+```typescript
+const composed = [
+  styles.componentName,
+  styles[theme],
+  styles[`size-${size}`],
+  className, // Additional classes passed via props
+].filter(Boolean).join(' ');
+```
+
+### Dynamic Classes
+```typescript
+// Dynamic class name
+className={styles[variant]}
+
+// Template literal class name
+className={styles[`size-${size}`]}
+
+// Kebab-case class names
+className={styles['size-default']}
+```
+
+## 5. Asset Management
+
+### Asset Storage
+- Assets are not currently defined in the codebase
+- When added, assets should be stored in `src/assets/` directory
+- Image assets from Figma are available via localhost server at `http://localhost:3845/assets/`
+
+### Asset Usage Pattern
+```typescript
+// Images from Figma MCP server
+const image = 'http://localhost:3845/assets/<hash>.png';
+<img src={image} />
+```
+
+## 6. Icon System
+
+### Icon Storage
+- Icons are not currently defined in the codebase
+- When added, icons should follow the component pattern
+- Store icon components in `src/design-system/icons/` or individual component directories
+
+### Icon Naming Convention
+- Icon components: `IconName.tsx` (PascalCase)
+- Icon files: SVG format preferred
+- Export as React components
+
+## 7. Storybook Integration
+
+### Location
+Storybook configuration: `.storybook/` (auto-detected by Storybook)
+Stories: `src/design-system/<ComponentName>/ComponentName.stories.tsx`
+
+### Story Pattern
+```typescript
+import type { Meta, StoryObj } from '@storybook/react';
+import React, { useEffect } from 'react';
+import ComponentName from './ComponentName';
+
+const meta: Meta<typeof ComponentName> = {
+  title: 'Design System/ComponentName',
+  component: ComponentName,
+  argTypes: {
+    theme: { 
+      control: { type: 'inline-radio' }, 
+      options: ['primary', 'secondary'] 
+    },
+    size: { 
+      control: { type: 'inline-radio' }, 
+      options: ['default', 'small'] 
+    },
+  },
+  args: {
+    theme: 'primary',
+    size: 'default',
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof ComponentName>;
+
+// Minimal stories - just Light and Dark Mode
+export const LightMode: Story = {};
+
+export const DarkMode: Story = {
+  render: (args) => {
+    useEffect(() => {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      return () => document.documentElement.removeAttribute('data-theme');
+    }, []);
+    return <ComponentName {...args} />;
+  },
+};
+```
+
+### Storybook Rules
+1. **Minimal stories** - Keep stories to a minimum (typically just Light and Dark Mode)
+2. **Full controls** - All component props should be available via Storybook controls
+3. **No individual variant stories** - Rely on controls to demonstrate all options
+4. **Dark mode story** - Sets `data-theme="dark"` on `document.documentElement`
+
+### Running Storybook
+```bash
+npm run storybook
+```
+
+## 8. Project Structure
+
+### Directory Organization
+```
+src/
+  design-system/          # Design system components
+    ComponentName/
+      ComponentName.tsx
+      ComponentName.module.css
+      ComponentName.stories.tsx
+    COMPONENT_PATTERN.md  # Component documentation
+  styles/                 # Global styles
+    global.css           # CSS variables and global styles
+    VARIABLES_PATTERN.md  # Variables documentation
+  utils/                  # Utility functions
+    theme.ts             # Theme management
+  App.tsx                # Main app component
+  main.tsx               # React entry point
+```
+
+### File Naming Conventions
+- **Components**: PascalCase (e.g., `Button.tsx`)
+- **Styles**: Component name + `.module.css` (e.g., `Button.module.css`)
+- **Stories**: Component name + `.stories.tsx` (e.g., `Button.stories.tsx`)
+- **Utilities**: camelCase (e.g., `theme.ts`)
+- **Documentation**: UPPER_SNAKE_CASE.md (e.g., `COMPONENT_PATTERN.md`)
+
+## 9. Theme System
+
+### Theme Management
+- **Location**: `src/utils/theme.ts`
+- **Toggle**: `data-theme="dark"` on `document.documentElement`
+- **Persistence**: localStorage (key: `theme`)
+- **Fallback**: System preference → Light mode
+
+### Theme Functions
+```typescript
+import { initTheme, setTheme, toggleTheme, getInitialTheme } from '@/utils/theme';
+
+// Initialize theme on app load
+const theme = initTheme();
+
+// Set theme
+setTheme('dark');
+
+// Toggle theme
+const newTheme = toggleTheme(currentTheme);
+```
+
+### Theme Variables
+- **Light Mode**: `:root` in `global.css`
+- **Dark Mode**: `[data-theme="dark"]` in `global.css`
+- Components automatically support both modes through CSS variables
+
+## 10. Figma Integration Workflow
+
+### Syncing Variables from Figma
+1. **Get Figma node ID** from Figma URL (extract node-id parameter)
+2. **Convert node ID format**: `1-159` → `1:159` for MCP tools
+3. **Fetch variable definitions** using `mcp_Figma_get_variable_defs`
+4. **Update color_root tokens** in `global.css` if colors changed
+5. **Update component tokens** in both `:root` and `[data-theme="dark"]` sections
+6. **Check both modes** - Always verify light and dark mode values from Figma
+
+### Updating Component Variables
+When updating component theme variables from Figma:
+1. Check **both light and dark mode** values
+2. Update **color_root** if new colors are needed
+3. Update **component tokens** in `:root` for light mode
+4. Update **component tokens** in `[data-theme="dark"]` for dark mode (only if changed)
+5. Verify variable names match Figma naming conventions
+
+### Generating Components from Figma
+1. **Get design context** using `mcp_Figma_get_design_context` with node ID
+2. **Extract component structure** from Figma design
+3. **Follow component pattern** from `COMPONENT_PATTERN.md`
+4. **Use CSS Modules** with flat selectors for variants
+5. **Create Storybook stories** with Light/Dark Mode examples
+6. **Reference global CSS variables** - never hardcode values
+
+### Code Connect Integration
+- **Manifest**: `.codeconnect/manifest.json`
+- **Component mapping**: Use `mcp_Figma_get_code_connect_map` to find mapped components
+- **Connect components**: Use `mcp_Figma_add_code_connect_map` to map Figma nodes to code components
+
+## 11. Best Practices Summary
+
+### Component Development
+1. ✅ Always use global CSS variables
+2. ✅ Use CSS Modules for all component styles
+3. ✅ Separate CSS files for each component
+4. ✅ Use flat selectors for variants (CSS Modules auto-scopes)
+5. ✅ Nest pseudo-selectors within parent selectors
+6. ✅ Match Figma property names in component props
+7. ✅ Export TypeScript types
+8. ✅ Create Storybook stories for all components
+9. ✅ Support both light and dark modes
+10. ✅ Never hardcode colors, spacing, or typography
+
+### Variable Management
+1. ✅ Three-layer token architecture (color_root → aliases → components)
+2. ✅ Update color_root from Figma when colors change
+3. ✅ Check both light and dark mode when updating variables
+4. ✅ Keep variable names aligned with Figma
+5. ✅ Use semantic names for aliases
+6. ✅ Reference tokens, never use literals
+
+### Figma Integration
+1. ✅ Always check both light and dark mode values
+2. ✅ Extract node ID from Figma URLs (convert format)
+3. ✅ Sync color_root tokens first
+4. ✅ Update component tokens for both modes
+5. ✅ Verify variable names match Figma conventions
+6. ✅ Use Code Connect for component mapping
+
+## 12. Key File Locations
+
+- **Global Styles**: `src/styles/global.css`
+- **Variables Documentation**: `src/styles/VARIABLES_PATTERN.md`
+- **Component Pattern**: `src/design-system/COMPONENT_PATTERN.md`
+- **Theme Utilities**: `src/utils/theme.ts`
+- **Vite Config**: `vite.config.ts`
+- **Package Config**: `package.json`
+- **Code Connect**: `.codeconnect/manifest.json`
+
+## 13. Common Patterns
+
+### Button Component Example
+See `src/design-system/Button/Button.tsx` for a complete example of:
+- TypeScript component with forwardRef
+- CSS Modules styling
+- Theme and size variants
+- Storybook integration
+- Light/dark mode support

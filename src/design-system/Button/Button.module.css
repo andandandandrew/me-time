@@ -3,6 +3,7 @@
   font-family: var(--font-family-default);
   font-size: var(--text-size-default-font-size);
   line-height: var(--text-size-default-line-height);
+  text-decoration: none;
   border-radius: var(--radius-default);
   border: none;
   cursor: pointer;
@@ -10,63 +11,47 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--spacing-default) * 0.5);
+  gap: var(--spacing-default);
+}
 
-  /* sizes */
-  &.size-default {
-    height: var(--interactive-height-default);
-    padding: 0 calc(var(--spacing-default) * 1.6);
+/* sizes */
+.size-default {
+  height: var(--interactive-height-default);
+  padding: 0 var(--spacing-default);
+}
+
+.size-small {
+  height: var(--interactive-height-small);
+  padding: 0 var(--spacing-default);
+}
+
+/* variant themes */
+.primary {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-content);
+
+  &:hover {
+    background-color: var(--button-primary-bg-hover);
   }
 
-  &.size-small {
-    height: var(--interactive-height-small);
-    padding: 0 calc(var(--spacing-default) * 1.2);
+  &:active {
+    background-color: var(--button-primary-bg-press);
+  }
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--content-default);
+}
+
+/* disabled styles */
+.button {
+  &:disabled,
+  &[aria-disabled="true"] {
+    background-color: var(--disabled-background);
+    color: var(--disabled-content);
+    border-color: var(--disabled-background);
+    cursor: not-allowed;
   }
 
-  &.full-width {
-    width: 100%;
-  }
-
-  /* variant themes */
-  &.primary {
-    background-color: var(--button-primary-bg);
-    color: var(--button-primary-content);
-
-    &:hover {
-      background-color: var(--button-primary-bg-hover);
-    }
-
-    &:active {
-      background-color: var(--button-primary-bg-press);
-    }
-
-    &:disabled,
-    &[aria-disabled="true"] {
-      background-color: var(--disabled-background);
-      color: var(--disabled-content);
-      cursor: not-allowed;
-    }
-  }
-
-  &.ghost {
-    background-color: transparent;
-    color: var(--content-default);
-    border: 1px solid var(--stroke-default);
-
-    &:hover {
-      background-color: var(--background-surface-2);
-    }
-
-    &:active {
-      background-color: var(--background-surface-1);
-    }
-
-    &:disabled,
-    &[aria-disabled="true"] {
-      background-color: var(--disabled-background);
-      color: var(--disabled-content);
-      border-color: var(--disabled-background);
-      cursor: not-allowed;
-    }
-  }
 }
