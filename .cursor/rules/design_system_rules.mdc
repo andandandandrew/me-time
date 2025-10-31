@@ -93,12 +93,12 @@ The token system uses a three-layer architecture:
 ## 2. Component Library
 
 ### Location
-Components are located in `src/design-system/<ComponentName>/`
+Components are located in `src/components/design-system/<ComponentName>/`
 
 ### File Structure
 Each component must follow this structure:
 ```
-src/design-system/
+src/components/design-system/
   ComponentName/
     ComponentName.tsx          # Component implementation
     ComponentName.module.css   # Component styles (CSS Modules)
@@ -109,7 +109,7 @@ src/design-system/
 
 #### TypeScript Component Pattern
 ```typescript
-// src/design-system/ComponentName/ComponentName.tsx
+// src/components/design-system/ComponentName/ComponentName.tsx
 import styles from './ComponentName.module.css';
 
 interface ComponentNameProps {
@@ -185,7 +185,7 @@ All component styles use **CSS Modules** for scoped styling:
 
 ### CSS Pattern
 ```css
-/* src/design-system/ComponentName/ComponentName.module.css */
+/* src/components/design-system/ComponentName/ComponentName.module.css */
 
 /* Base component styles */
 .componentName {
@@ -283,7 +283,7 @@ const image = 'http://localhost:3845/assets/<hash>.png';
 ### Icon Storage
 - Icons are not currently defined in the codebase
 - When added, icons should follow the component pattern
-- Store icon components in `src/design-system/icons/` or individual component directories
+- Store icon components in `src/components/design-system/icons/` or individual component directories
 
 ### Icon Naming Convention
 - Icon components: `IconName.tsx` (PascalCase)
@@ -294,7 +294,7 @@ const image = 'http://localhost:3845/assets/<hash>.png';
 
 ### Location
 Storybook configuration: `.storybook/` (auto-detected by Storybook)
-Stories: `src/design-system/<ComponentName>/ComponentName.stories.tsx`
+Stories: `src/components/design-system/<ComponentName>/ComponentName.stories.tsx`
 
 ### Story Pattern
 ```typescript
@@ -354,12 +354,12 @@ npm run storybook
 ### Directory Organization
 ```
 src/
-  design-system/          # Design system components
-    ComponentName/
-      ComponentName.tsx
-      ComponentName.module.css
-      ComponentName.stories.tsx
-    COMPONENT_PATTERN.md  # Component documentation
+  components/             # React components
+    design-system/        # Design system components
+      ComponentName/
+        ComponentName.tsx
+        ComponentName.module.css
+        ComponentName.stories.tsx
   styles/                 # Global styles
     global.css           # CSS variables and global styles
     VARIABLES_PATTERN.md  # Variables documentation
@@ -468,7 +468,6 @@ When updating component theme variables from Figma:
 
 - **Global Styles**: `src/styles/global.css`
 - **Variables Documentation**: `src/styles/VARIABLES_PATTERN.md`
-- **Component Pattern**: `src/design-system/COMPONENT_PATTERN.md`
 - **Theme Utilities**: `src/utils/theme.ts`
 - **Vite Config**: `vite.config.ts`
 - **Package Config**: `package.json`
@@ -477,7 +476,7 @@ When updating component theme variables from Figma:
 ## 13. Common Patterns
 
 ### Button Component Example
-See `src/design-system/Button/Button.tsx` for a complete example of:
+See `src/components/design-system/Button/Button.tsx` for a complete example of:
 - TypeScript component with forwardRef
 - CSS Modules styling
 - Theme and size variants

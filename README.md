@@ -31,8 +31,9 @@ npm run build
 
 ```
 src/
-  design-system/     # Design system components
-  styles/            # Global CSS files
+  components/        # React components
+    design-system/   # Design system components
+  styles/           # Global CSS files
     global.css       # Global CSS variables for light/dark mode
   utils/             # Utility functions
     theme.ts         # Theme management utilities
@@ -51,7 +52,7 @@ Global CSS variables are defined in `src/styles/global.css` and are synced with 
 
 ### Component Structure
 
-Each component in `src/design-system/` should:
+Each component in `src/components/design-system/` should:
 - Have its own TypeScript file (e.g., `Button.tsx`)
 - Have its own CSS file (e.g., `Button.css`)
 - Use global CSS variables from `global.css`
@@ -60,7 +61,7 @@ Each component in `src/design-system/` should:
 ### Example Component Pattern
 
 ```typescript
-// src/design-system/Button/Button.tsx
+// src/components/design-system/Button/Button.tsx
 import './Button.css'
 
 export const Button = ({ children, ...props }) => {
@@ -73,7 +74,7 @@ export const Button = ({ children, ...props }) => {
 ```
 
 ```css
-/* src/design-system/Button/Button.css */
+/* src/components/design-system/Button/Button.css */
 .button {
   background-color: var(--color-button-primary-bg);
   color: var(--color-button-primary-content);

@@ -24,7 +24,7 @@ function App() {
       <h1>Design System Foundation</h1>
       <p>Theme: {theme}</p>
       <p>This is the foundation setup for the design system.</p>
-      <p>Components will be added to the <code>src/design-system/</code> directory.</p>
+      <p>Components will be added to the <code>src/components/design-system/</code> directory.</p>
 
     </div>
   )
