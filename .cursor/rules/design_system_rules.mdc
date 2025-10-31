@@ -159,6 +159,7 @@ export const ComponentName = ({
 - **Language**: TypeScript 5.2+
 - **Build System**: Vite 5.0+
 - **Styling**: CSS Modules with PostCSS nesting
+- **Icons**: Lucide React
 - **Documentation**: Storybook 8.3+
 
 ### Dependencies
@@ -166,6 +167,7 @@ export const ComponentName = ({
 {
   "react": "^18.2.0",
   "react-dom": "^18.2.0",
+  "lucide-react": "^0.552.0",
   "@vitejs/plugin-react": "^4.2.1",
   "postcss": "^8.4.47",
   "postcss-nesting": "^12.1.5",
@@ -284,15 +286,64 @@ const image = 'http://localhost:3845/assets/<hash>.png';
 
 ## 6. Icon System
 
-### Icon Storage
-- Icons are not currently defined in the codebase
-- When added, icons should follow the component pattern
-- Store icon components in `src/components/design-system/icons/` or individual component directories
+### Lucide React Integration
 
-### Icon Naming Convention
+This project uses [Lucide React](https://lucide.dev/guide/packages/lucide-react) for icons. Lucide provides a comprehensive set of icons as React components with full TypeScript support.
+
+### Icon Usage Pattern
+
+Icons should be imported directly from `lucide-react`:
+
+```typescript
+import { Camera, Heart, Settings } from 'lucide-react';
+
+// Usage in components
+<Camera size={24} color="currentColor" />
+<Heart size={48} fill="red" />
+<Settings strokeWidth={2} />
+```
+
+### Icon Props
+
+Icons accept standard SVG props:
+- `size` (number, default: 24) - Size of the icon
+- `color` (string, default: "currentColor") - Color of the icon
+- `strokeWidth` (number, default: 2) - Stroke width
+- `absoluteStrokeWidth` (boolean, default: false) - Use absolute stroke width
+- All standard SVG attributes are supported
+
+### Icon Styling
+
+Icons can be styled using:
+- **Props**: Pass `color`, `size`, `strokeWidth` directly as props
+- **CSS Variables**: Use `color="currentColor"` and style via CSS variables
+- **Global styles**: All SVG presentation attributes are supported
+
+```typescript
+// Example: Using CSS variables for theming
+import { Settings } from 'lucide-react';
+
+<Settings 
+  size={24} 
+  color="var(--content-default)" 
+  strokeWidth={2}
+/>
+```
+
+### Benefits
+
+- **Tree-shakable**: Only icons you import are included in the bundle
+- **TypeScript support**: Full type safety for all icons
+- **Flexible styling**: Icons accept all SVG props for customization
+- **Performance**: Renders as optimized inline SVG elements
+
+### Custom Icons
+
+If custom icons are needed beyond Lucide's library:
+- Store custom icon components in `src/components/design-system/icons/`
+- Follow the component pattern (TypeScript + CSS Modules)
 - Icon components: `IconName.tsx` (PascalCase)
-- Icon files: SVG format preferred
-- Export as React components
+- Use SVG format for custom icons
 
 ## 7. Storybook Integration
 

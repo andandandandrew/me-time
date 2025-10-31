@@ -84,6 +84,42 @@ export const Button = ({ children, ...props }) => {
 }
 ```
 
+## Icons
+
+### Lucide React
+
+This project uses [Lucide React](https://lucide.dev/guide/packages/lucide-react) for icons. Lucide provides a comprehensive set of icons as React components with full TypeScript support.
+
+### Installation
+
+Lucide React is already installed. You can use it by importing icons directly:
+
+```typescript
+import { Camera, Heart, Settings } from 'lucide-react';
+
+// Usage in components
+<Camera size={24} color="currentColor" />
+<Heart size={48} fill="red" />
+<Settings strokeWidth={2} />
+```
+
+### Icon Props
+
+Icons accept standard SVG props:
+- `size` (number, default: 24) - Size of the icon
+- `color` (string, default: "currentColor") - Color of the icon
+- `strokeWidth` (number, default: 2) - Stroke width
+- All standard SVG attributes are supported
+
+### Benefits
+
+- **Tree-shakable**: Only icons you import are included in the bundle
+- **TypeScript support**: Full type safety for all icons
+- **Flexible styling**: Icons accept all SVG props for customization
+- **Performance**: Renders as optimized inline SVG elements
+
+For more information, visit the [Lucide React documentation](https://lucide.dev/guide/packages/lucide-react).
+
 ## Figma Integration
 
 ### MCP Server
