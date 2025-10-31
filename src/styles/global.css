@@ -1,0 +1,83 @@
+/* Global CSS Variables - Synced with Figma Design Tokens */
+
+/* Light Mode Variables (Default) */
+:root {
+  /* color_root base (no modes) */
+  --root-base-white: #ffffff;
+  --root-base-black: #171717;
+  --root-gray-100: #f3f4f6;
+  --root-gray-300: #d1d5db;
+  --root-gray-500: #6b7280;
+  --root-gray-950: #0a0a0a;
+  --root-green-300: #6ee7b7;
+  --root-green-400: #34d399;
+  --root-green-500: #10b981;
+  --root-green-600: #0e8b55;
+  --root-green-700: #095d39;
+
+  /* aliases (semantic) */
+  --background-surface-1: var(--root-base-white);
+  --background-surface-2: var(--root-gray-100);
+  --content-default: var(--root-gray-950);
+  --stroke-default: var(--root-gray-300);
+  --disabled-background: var(--root-gray-500);
+  --disabled-content: var(--root-gray-300);
+
+  /* component tokens (reference aliases or root scales) */
+  --button-primary-bg: var(--root-green-500);
+  --button-primary-bg-hover: var(--root-green-600);
+  --button-primary-bg-press: var(--root-green-700);
+  --button-primary-content: var(--content-default);
+
+  /* Typography */
+  --font-family-default: "Inter", sans-serif;
+  --text-size-default-font-size: 16px;
+  --text-size-default-line-height: 24px;
+  --text-size-default-letter-spacing: 0;
+  --text-default-regular-trimmed: Font(family: "Inter", style: Regular, size: 16, weight: 400, lineHeight: 24);
+
+  /* Spacing */
+  --spacing-default: 10px;
+
+  /* Radius */
+  --radius-default: 10px;
+
+  /* Interactive Heights */
+  --interactive-height-default: 40px;
+  --interactive-height-small: 32px;
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+  /* override aliases (root stays constant) */
+  --content-default: var(--root-base-white);
+  --background-surface-1: var(--root-base-black);
+
+  /* Example: adjust component theme in dark mode */
+  --button-primary-bg: var(--root-green-300);
+  --button-primary-bg-hover: var(--root-green-400);
+  --button-primary-bg-press: var(--root-green-500);
+  --button-primary-content: var(--content-default);
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-default);
+  font-size: var(--text-size-default-font-size);
+  line-height: var(--text-size-default-line-height);
+  letter-spacing: var(--text-size-default-letter-spacing);
+  color: var(--content-default);
+  background-color: var(--background-surface-1);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
