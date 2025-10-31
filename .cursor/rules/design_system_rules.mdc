@@ -1,3 +1,7 @@
+---
+description: Generating and updating design system components, design system variables, interacting with Figma MCP
+alwaysApply: false
+---
 # Design System Rules for Figma Integration
 
 This document defines the design system structure and patterns for integrating Figma designs using the Model Context Protocol (MCP).
