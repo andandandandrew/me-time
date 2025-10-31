@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import styles from './Button.module.css';
+import type { LucideIcon } from 'lucide-react';
 
 export type ButtonTheme = 'primary' | 'ghost';
 export type ButtonSize = 'default' | 'small';
@@ -10,6 +11,7 @@ type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & { as?: 
 type CommonProps = {
   theme?: ButtonTheme;
   size?: ButtonSize;
+  icon?: LucideIcon;
 };
 
 export type DSButtonProps = CommonProps & (AnchorProps | NativeButtonProps);
@@ -21,6 +23,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, DSButton
       size = 'default',
       className = '',
       children,
+      icon: Icon,
       as = 'button',
       ...rest
     },
@@ -35,10 +38,15 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, DSButton
       .filter(Boolean)
       .join(' ');
 
+    const iconElement = Icon ? (
+      <Icon size={16} color="currentColor" strokeWidth={1.5} />
+    ) : null;
+
     if (as === 'a') {
       const anchorProps = rest as React.AnchorHTMLAttributes<HTMLAnchorElement>;
       return (
         <a ref={ref as React.Ref<HTMLAnchorElement>} className={composed} {...anchorProps}>
+          {iconElement}
           {children}
         </a>
       );
@@ -47,6 +55,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, DSButton
     const buttonProps = rest as React.ButtonHTMLAttributes<HTMLButtonElement>;
     return (
       <button ref={ref as React.Ref<HTMLButtonElement>} className={composed} {...buttonProps}>
+        {iconElement}
         {children}
       </button>
     );

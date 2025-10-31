@@ -1,17 +1,17 @@
 /* base, shared styles */
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-small);
+  border-radius: var(--radius-default);
+  border: none;
   font-family: var(--font-family-default);
   font-size: var(--text-size-default-font-size);
   line-height: var(--text-size-default-line-height);
   text-decoration: none;
-  border-radius: var(--radius-default);
-  border: none;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-default);
 }
 
 /* sizes */
@@ -50,7 +50,6 @@
   &[aria-disabled="true"] {
     background-color: var(--disabled-background);
     color: var(--disabled-content);
-    border-color: var(--disabled-background);
     cursor: not-allowed;
   }
 
